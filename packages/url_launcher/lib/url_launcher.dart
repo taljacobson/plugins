@@ -20,9 +20,10 @@ const MethodChannel _channel = MethodChannel('plugins.flutter.io/url_launcher');
 /// [forceSafariVC] is only used in iOS. If unset, the launcher opens web URLs
 /// in the safari VC, anything else is opened using the default handler on the
 /// platform. If set to true, it opens the URL in the Safari view controller.
-/// If false, the URL is opened in the default browser of the phone. Set this to
-/// false if you want to use the cookies/context of the main browser of the app
-/// (such as SSO flows).
+/// If false, the URL is opened in the default browser of the phone. Note that
+/// to work with universal links on iOS, this must be set to false to let
+/// the platform's system handle the URL. Set this to false if you want to
+/// use the cookies/context of the main browser of the app(such as SSO flows).
 ///
 /// [forceWebView] is an Android only setting. If null or false, the URL is
 /// always launched with the default browser on device. If set to true, the URL
@@ -63,6 +64,9 @@ Future<void> launch(
         ? SystemUiOverlayStyle.dark
         : SystemUiOverlayStyle.light);
   }
+  // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.
+  // https://github.com/flutter/flutter/issues/26431
+  // ignore: strong_mode_implicit_dynamic_method
   return _channel.invokeMethod(
     'launch',
     <String, Object>{
@@ -85,6 +89,9 @@ Future<bool> canLaunch(String urlString) async {
   if (urlString == null) {
     return false;
   }
+  // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.
+  // https://github.com/flutter/flutter/issues/26431
+  // ignore: strong_mode_implicit_dynamic_method
   return await _channel.invokeMethod(
     'canLaunch',
     <String, Object>{'url': urlString},
@@ -99,5 +106,8 @@ Future<bool> canLaunch(String urlString) async {
 /// `true`, this call will not do anything either, simply because there is no
 /// WebView available to be closed.
 Future<void> closeWebView() async {
+  // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.
+  // https://github.com/flutter/flutter/issues/26431
+  // ignore: strong_mode_implicit_dynamic_method
   return await _channel.invokeMethod('closeWebView');
 }

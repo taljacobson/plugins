@@ -270,6 +270,7 @@ class FirebaseAuth {
     @required PhoneVerificationFailed verificationFailed,
     @required PhoneCodeSent codeSent,
     @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+    bool linkCredentials = false
   }) async {
     final Map<String, dynamic> callbacks = <String, dynamic>{
       'PhoneVerificationCompleted': verificationCompleted,
@@ -286,6 +287,7 @@ class FirebaseAuth {
       'timeout': timeout.inMilliseconds,
       'forceResendingToken': forceResendingToken,
       'app': app.name,
+      'link': linkCredentials,
     };
 
     // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.

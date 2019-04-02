@@ -284,15 +284,16 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
   }
 
   private void handleLinkWithCredential(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
-    AuthCredential credential = getCredential((Map<String, Object>) call.arguments());
-
     final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     
     if (currentUser == null) {
       markUserRequired(result);
       return;
     }
-    
+
+    @SuppressWarnings("unchecked")
+    AuthCredential credential = getCredential((Map<String, Object>) call.arguments);
+
     currentUser
         .linkWithCredential(credential)
         .addOnCompleteListener(new SignInCompleteListener(result));

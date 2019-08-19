@@ -1,3 +1,7 @@
+// Copyright 2019 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/services.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,6 +32,9 @@ void main() {
           .setMockMethodCallHandler((MethodCall methodCall) async {
         switch (methodCall.method) {
           case 'listen':
+            // TODO(hterkelsen): Remove this when defaultBinaryMessages is in stable.
+            // https://github.com/flutter/flutter/issues/33446
+            // ignore: deprecated_member_use
             await BinaryMessages.handlePlatformMessage(
               Connectivity.eventChannel.name,
               Connectivity.eventChannel.codec.encodeSuccessEnvelope('wifi'),

@@ -1,3 +1,7 @@
+// Copyright 2019 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #import <Flutter/Flutter.h>
 
 #import "Firebase/Firebase.h"
@@ -8,9 +12,8 @@
 
 @protocol Detector
 @required
-+ (void)handleDetection:(FIRVisionImage *)image
-                options:(NSDictionary *)options
-                 result:(FlutterResult)result;
+- (instancetype)initWithVision:(FIRVision *)vision options:(NSDictionary *)options;
+- (void)handleDetection:(FIRVisionImage *)image result:(FlutterResult)result;
 @optional
 @end
 

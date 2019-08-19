@@ -15,13 +15,40 @@ final MethodChannel _channel = const MethodChannel('plugins.flutter.io/camera');
 
 enum CameraLensDirection { front, back, external }
 
-enum ResolutionPreset { low, medium, high }
+/// Affect the quality of video recording and image capture:
+///
+/// If a preset is not available on the camera being used a preset of lower quality will be selected automatically.
+enum ResolutionPreset {
+  /// 352x288 on iOS, 240p (320x240) on Android
+  low,
+
+  /// 480p (640x480 on iOS, 720x480 on Android)
+  medium,
+
+  /// 720p (1280x720)
+  high,
+
+  /// 1080p (1920x1080)
+  veryHigh,
+
+  /// 2160p (3840x2160)
+  ultraHigh,
+
+  /// The highest resolution available.
+  max,
+}
 
 typedef onLatestImageAvailable = Function(CameraImage image);
 
 /// Returns the resolution preset as a String.
 String serializeResolutionPreset(ResolutionPreset resolutionPreset) {
   switch (resolutionPreset) {
+    case ResolutionPreset.max:
+      return 'max';
+    case ResolutionPreset.ultraHigh:
+      return 'ultraHigh';
+    case ResolutionPreset.veryHigh:
+      return 'veryHigh';
     case ResolutionPreset.high:
       return 'high';
     case ResolutionPreset.medium:
@@ -203,13 +230,17 @@ class CameraValue {
 ///
 /// To show the camera preview on the screen use a [CameraPreview] widget.
 class CameraController extends ValueNotifier<CameraValue> {
-  CameraController(this.description, this.resolutionPreset,
-      {this.withVideo = false})
-      : super(const CameraValue.uninitialized());
+  CameraController(
+    this.description,
+    this.resolutionPreset, {
+    this.enableAudio = true,
+  }) : super(const CameraValue.uninitialized());
 
   final CameraDescription description;
   final ResolutionPreset resolutionPreset;
-  final bool withVideo;
+
+  /// Whether to include audio when recording a video.
+  final bool enableAudio;
 
   int _textureId;
   bool _isDisposed = false;
@@ -232,7 +263,7 @@ class CameraController extends ValueNotifier<CameraValue> {
         <String, dynamic>{
           'cameraName': description.name,
           'resolutionPreset': serializeResolutionPreset(resolutionPreset),
-          'withVideo': withVideo,
+          'enableAudio': enableAudio,
         },
       );
       _textureId = reply['textureId'];
@@ -428,12 +459,6 @@ class CameraController extends ValueNotifier<CameraValue> {
       throw CameraException(
         'A video recording is already started.',
         'startVideoRecording was called when a recording is already started.',
-      );
-    }
-    if (!withVideo) {
-      throw CameraException(
-        'CameraController not configured with video support.',
-        'Pass "withVideo: true" on construction.',
       );
     }
     if (value.isStreamingImages) {

@@ -1,3 +1,7 @@
+// Copyright 2019 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 part of firebase_database;
 
 class OnDisconnect {
@@ -8,10 +12,7 @@ class OnDisconnect {
   final String path;
 
   Future<void> set(dynamic value, {dynamic priority}) {
-    // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.
-    // https://github.com/flutter/flutter/issues/26431
-    // ignore: strong_mode_implicit_dynamic_method
-    return _database._channel.invokeMethod(
+    return _database._channel.invokeMethod<void>(
       'OnDisconnect#set',
       <String, dynamic>{
         'app': _database.app?.name,
@@ -26,10 +27,7 @@ class OnDisconnect {
   Future<void> remove() => set(null);
 
   Future<void> cancel() {
-    // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.
-    // https://github.com/flutter/flutter/issues/26431
-    // ignore: strong_mode_implicit_dynamic_method
-    return _database._channel.invokeMethod(
+    return _database._channel.invokeMethod<void>(
       'OnDisconnect#cancel',
       <String, dynamic>{
         'app': _database.app?.name,
@@ -40,10 +38,7 @@ class OnDisconnect {
   }
 
   Future<void> update(Map<String, dynamic> value) {
-    // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.
-    // https://github.com/flutter/flutter/issues/26431
-    // ignore: strong_mode_implicit_dynamic_method
-    return _database._channel.invokeMethod(
+    return _database._channel.invokeMethod<void>(
       'OnDisconnect#update',
       <String, dynamic>{
         'app': _database.app?.name,
